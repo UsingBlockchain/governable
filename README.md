@@ -3,9 +3,14 @@
 [![npm version](https://badge.fury.io/js/governable.svg)](https://badge.fury.io/js/governable)
 [![Build Status](https://travis-ci.com/usingblockchain/governable.svg?branch=main)](https://travis-ci.com/usingblockchain/governable)
 
-This repository contains the source code for **governable**, a peer-to-peer organization structure.
+This repository contains the source code for **governable**, an open standard for managing distributed organizations on top of Symbol from NEM, and compatible networks.
 
-*The author of this package cannot be held responsible for any loss of money or any malintentioned usage forms of this package. Please use this package with caution.*
+- [Reference documentation](https://governable.symbol.ninja/docs/1.0.0)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Sponsor Us](#sponsor-us)
+- [Disclaimer](#disclaimer)
+- [Licensing](#license)
 
 ## Installation
 
@@ -80,6 +85,14 @@ const resultURI = myAwesomeOrg.execute(
 // wallets.
 ```
 
+## Sponsor us
+
+| Platform | Sponsor Link |
+| --- | --- |
+| Paypal | [https://paypal.me/usingblockchainltd](https://paypal.me/usingblockchainltd) |
+| Patreon | [https://patreon.com/usingblockchainltd](https://patreon.com/usingblockchainltd) |
+| Github | [https://github.com/sponsors/UsingBlockchain](https://github.com/sponsors/UsingBlockchain) |
+
 ## Donations / Pot de vin
 
 Donations can also be made with cryptocurrencies and will be used for running the project!
@@ -89,20 +102,18 @@ Donations can also be made with cryptocurrencies and will be used for running th
     Ethereum (ETH):     0x7a846fd5Daa4b904caF7C59f866bb906153305D2
     Bitcoin  (BTC):     3EVqgUqYFRYbf9RjhyjBgKXcEwAQxhaf6o
 
-## Sponsor us
-
-| Platform | Sponsor Link |
-| --- | --- |
-| Paypal | [https://paypal.me/usingblockchainltd](https://paypal.me/usingblockchainltd) |
-| Patreon | [https://patreon.com/usingblockchainltd](https://patreon.com/usingblockchainltd) |
-| Github | [https://github.com/sponsors/UsingBlockchain](https://github.com/sponsors/UsingBlockchain) |
-
 ## Credits
 
 | Name | Contributions |
 | --- | --- |
 | Using Blockchain Ltd (@UsingBlockchain) <info@using-blockchain.org> | Product Owner |
 | Grégory Saive (@eVias) | Lead Engineering |
+
+## Disclaimer
+
+  *The author of this package cannot be held responsible for any loss of money or any malintentioned usage forms of this package. Please use this package with caution.*
+
+  *Our software contains links to the websites of third parties (“external links”). As the content of these websites is not under our control, we cannot assume any liability for such external content. In all cases, the provider of information of the linked websites is liable for the content and accuracy of the information provided. At the point in time when the links were placed, no infringements of the law were recognisable to us..*
 
 ## License
 
