@@ -75,8 +75,8 @@ export class CreateAgreement extends Executable {
   public arguments: string[] = [
     'password',
     'mnemonic',
-    'path',
     'operators',
+    'agreementPath',
   ]
 
   /**

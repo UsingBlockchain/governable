@@ -28,7 +28,7 @@ import { getTestAccount, getTestAccountInfo, getTestOrganization, Stubs } from '
 const seedHash = 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4'
 const organisation = getTestOrganization()
 const target = getTestAccount('target')
-const defaultTarget = 'TCS5GSPGMCTGTI46SSZIBZMRVTLM4BDQ7MRXAYI' // m/44'/4343'/0'/0'/0'
+const defaultTarget = 'TD4YEJJUQ7HBDWF5LRLUUBE6CI7OS7OEN3USJ3I' // m/44'/4343'/0'/0'/0'
 
 describe('DistributedOrganization --->', () => {
   describe('constructor() should', () => {
@@ -44,7 +44,7 @@ describe('DistributedOrganization --->', () => {
 
   describe('identifier() should', () => {
     it('derive correct DAO assets identifier', () => {
-      expect(organisation.identifier.id).to.be.equal('c2aa7f8d')
+      expect(organisation.identifier.id).to.be.equal('9e03faed')
       expect(organisation.identifier.target.address.plain()).to.be.equal(defaultTarget)
     })
   })

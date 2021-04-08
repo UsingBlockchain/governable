@@ -27,7 +27,7 @@ type TestAccountType = {
 const TEST_ACCOUNTS: TestAccountType = {
   "target": {
     networkType: NetworkType.TEST_NET,
-    // TCS5GSPGMCTGTI46SSZIBZMRVTLM4BDQ7MRXAYI
+    // TD4YEJJUQ7HBDWF5LRLUUBE6CI7OS7OEN3USJ3I
     privateKey: '27002B109810E4C25E8E6AE964FAF129CC3BFD1A95CB99062E0205060041D0C9'},
   "operator1": {
     networkType: NetworkType.TEST_NET,

@@ -100,7 +100,7 @@ export const DigitalContracts: ContractsList = {
  * @description Contains text that describes the derivation path for the
  *              target account of distributed organizations.
  */
-export const TargetDerivationPath: string = 'm/4343\'/0\'/0\'/0\''
+export const TargetDerivationPath: string = 'm/44\'/4343\'/0\'/0\'/0\''
 
 /**
  * @var Governable.VotingDerivationPath
@@ -115,7 +115,7 @@ export const TargetDerivationPath: string = 'm/4343\'/0\'/0\'/0\''
  *              be derived, such that the account can not be tracked up
  *              to the original operator account.
  */
-export const VotingDerivationPath: string = 'm/4343\'/999\'/0\'/0\''
+export const VotingDerivationPath: string = 'm/44\'/4343\'/999\'/0\'/0\''
 
 /**
  * @var Governable.Revision
