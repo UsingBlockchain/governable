@@ -55,7 +55,7 @@ const contextWithArgs = new Context(
   [new ContractOption('identifier', 'id')],
 )
 
-describe('contracts/Context --->', () => {
+describe('kernel/Context --->', () => {
   describe('getInput() should', () => {
     it('use default value given no arguments', () => {
       // act

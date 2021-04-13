@@ -7,9 +7,10 @@
  * @license     AGPL-3.0
  */
 
- import {
+import {
   AccountMetadataTransaction,
   AccountMosaicRestrictionTransaction,
+  Address,
   EmptyMessage,
   InnerTransaction,
   KeyGenerator,
@@ -31,6 +32,7 @@
   Transaction,
   TransferTransaction,
   UInt64,
+  TransactionType,
 } from 'symbol-sdk'
 
 // internal dependencies
@@ -39,6 +41,9 @@ import {
   ContractOption,
   MetadataBucket,
   Symbol,
+  Taxonomy,
+  TaxonomyMap,
+  SemanticsMap,
 } from '../../index'
 import { Executable } from './Executable'
 
@@ -80,8 +85,8 @@ import { Executable } from './Executable'
  * | 12 | AccountMetadataTransaction | Target Account | Assigns the `Contact` metadata value to the **target account**. |
  * | 13 | AccountMetadataTransaction | Target Account | Assigns the `Description` metadata value to the **target account**. |
  * | 14 | AccountMetadataTransaction | Target Account | Assigns the `Image` metadata value to the **target account**. |
- * | 15 | MosaicAddressRestrictionTransaction | Target Account | Assigns the restriction value `2` ("Operator") to the **operator accounts**. |
- * | 16..n | TransferTransaction | Target Account | Transfers the initially created supply of governance assets to the **operator accounts**. |
+ * | 15..n | MosaicAddressRestrictionTransaction | Target Account | Assigns the restriction value `2` ("Operator") to the **operator accounts**. This transaction will be repeated per each operator. |
+ * | 16..n | TransferTransaction | Target Account | Transfers the initially created supply of governance assets to the **operator accounts**. This transaction will be repeated per each operator. |
  * | n+1 | TransferTransaction | Target Account | Adds an execution proof message sent to the **target** account. |
  */
 export class CreateDAO extends Executable {
@@ -91,9 +96,49 @@ export class CreateDAO extends Executable {
    *              *this* digital contract.
    */
   public arguments: string[] = [
+    'target',
     'operators',
     'metadata', // @see {MetadataBucket}
   ]
+
+  /**
+   * @overwrite Definition of the sequence of appearance of
+   * transactions inside a `CommitAgreement` contract.
+   */
+  public get specification(): Taxonomy {
+    // - Prepares required transactions
+    const requiredTxes = new TaxonomyMap([
+      [0, { type: TransactionType.MULTISIG_ACCOUNT_MODIFICATION, required: true }],
+      [1, { type: TransactionType.MOSAIC_DEFINITION, required: true }],
+      [2, { type: TransactionType.MOSAIC_SUPPLY_CHANGE, required: true }],
+      [3, { type: TransactionType.ACCOUNT_MOSAIC_RESTRICTION, required: true }],
+      [4, { type: TransactionType.MOSAIC_GLOBAL_RESTRICTION, required: true }],
+      [5, { type: TransactionType.MOSAIC_ADDRESS_RESTRICTION, required: true }],
+      [6, { type: TransactionType.MOSAIC_METADATA, required: true }],
+      [7, { type: TransactionType.ACCOUNT_METADATA, required: true }],
+      [8, { type: TransactionType.ACCOUNT_METADATA, required: false }],
+      [9, { type: TransactionType.ACCOUNT_METADATA, required: false }],
+      [10, { type: TransactionType.ACCOUNT_METADATA, required: false }],
+      [11, { type: TransactionType.ACCOUNT_METADATA, required: false }],
+      [12, { type: TransactionType.ACCOUNT_METADATA, required: false }],
+      [13, { type: TransactionType.ACCOUNT_METADATA, required: false }],
+      [14, { type: TransactionType.MOSAIC_ADDRESS_RESTRICTION, required: true }],
+      [15, { type: TransactionType.TRANSFER, required: true }],
+      [16, { type: TransactionType.TRANSFER, required: true }],
+    ])
+
+    // - Prepares bundling rules, repeating, etc.
+    const semanticsRules = new SemanticsMap([
+      [14, { bundleWith: [15], repeatable: true, minOccurences: 1, maxOccurences: 0}]
+    ])
+
+    // - Bundle into a "transaction taxonomy"
+    return new Taxonomy(
+      'Governable.CreateDAO',
+      requiredTxes,
+      semanticsRules,
+    )
+  }
 
   /**
    * Verifies **allowance** of \a actor to execute a contract
@@ -117,9 +162,17 @@ export class CreateDAO extends Executable {
     // - Asserts the presence of mandatory inputs
     super.assertHasMandatoryArguments(argv, this.arguments)
 
+    // - Reads the target account from arguments
+    const newTarget = this.context.getInput('target', new PublicAccount())
+
+    //XXX operators count minimum 2 (or more?)
+
     // - Allows anyone to start a new DAO provided correct
-    //   target account is used.
-    return new AllowanceResult(!!this.agreement && !!this.mosaicInfo)
+    //   target account is used and given that a confirmed
+    //   agreement can be read from the network.
+    return new AllowanceResult(!!this.agreement &&
+      newTarget.address.equals(this.target.address)
+    )
   }
 
   // region abstract methods
@@ -250,7 +303,7 @@ export class CreateDAO extends Executable {
       KeyGenerator.generateUInt64Key('User_Role'),
       UInt64.fromUint(0), // previousRestrictionValue
       MosaicRestrictionType.NONE, // previousRestrictionType
-      UInt64.fromUint(2), // newRestrictionValue: 1 = Target ; 2 = Operator ; 3 = Locker ; 4 = Guest
+      UInt64.fromUint(2), // newRestrictionValue: 1 = Target ; 2 = Operator ; 3 = Guest
       MosaicRestrictionType.LE, // newRestrictionType: `less or equal to`
       reader.networkType,
       undefined, // referenceMosaicId: empty means "self"

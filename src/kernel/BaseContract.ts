@@ -138,8 +138,16 @@ export abstract class BaseContract implements Contract {
     argv: ContractOption[] | undefined,
     fields: string[]
   ): boolean {
-    // check that all `fields` are present in context
+    // check that all `fields` are present in argv or context
     for (let i = 0, m = fields.length; i < m; i ++) {
+
+      // find in argv
+      if (!!argv && argv.length) {
+        const it = argv.find(opt => opt.name === fields[i])
+        return !!it
+      }
+
+      // fallback to context arguments
       const value = this.context.getInput(fields[i], null)
       if (null === value) {
         throw new FailureMissingArgument('Missing argument "' + fields[i] + '"')

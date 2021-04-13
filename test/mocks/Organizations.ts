@@ -23,12 +23,12 @@ export class FakeOrganization extends Governable.DistributedOrganization {
   public fakeGetContext(
     actor: PublicAccount,
     params: TransactionParameters = new TransactionParameters(),
-    argv?: ContractOption[]
+    argv?: ContractOption[],
   ): Context {
     return this.getContext(
       actor,
       params,
-      argv
+      argv,
     )
   }
 
@@ -44,7 +44,9 @@ export class FakeOrganization extends Governable.DistributedOrganization {
   }
 }
 
-export const getTestOrganization = (): FakeOrganization => {
+export const getTestOrganization = (
+  agreementHash?: string,
+): FakeOrganization => {
   return new FakeOrganization(
     'SWP:XYM',
     new Symbol.Reader(
@@ -57,6 +59,7 @@ export const getTestOrganization = (): FakeOrganization => {
     ),
     new Symbol.Signer(),
     mnemonic,
-    '',
+    '', // password
+    agreementHash,
   )
 }

@@ -18,10 +18,11 @@ import { Context, TransactionParameters, Symbol } from '../../index'
 
 export const getTestContext = (
   nodeUrl: string,
-  actor?: string
+  actor?: string,
+  revision: number = 1,
 ): Context => {
   return new Context(
-    1,
+    revision,
     getTestAccount(actor || 'operator1'),
     new Symbol.Reader(
       nodeUrl,

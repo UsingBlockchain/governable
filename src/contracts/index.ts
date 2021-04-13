@@ -9,8 +9,6 @@
 import { CreateAgreement as CreateAgreementImpl } from './CreateAgreement'
 import { CommitAgreement as CommitAgreementImpl } from './CommitAgreement'
 import { CreateDAO as CreateDAOImpl } from './CreateDAO'
-import { CreateVote as CreateVoteImpl } from './CreateVote'
-import { Vote as VoteImpl } from './Vote'
 
 /**
  * @namespace Governable.DAOContracts
@@ -29,11 +27,5 @@ export namespace DAOContracts {
 
   // - Exports an alias to the `CreateDAO` contract implementation
   export class CreateDAO extends CreateDAOImpl {}
-
-  // - Exports an alias to the `CreateVote` contract implementation
-  export class CreateVote extends CreateVoteImpl {}
-
-  // - Exports an alias to the `Vote` contract implementation
-  export class Vote extends VoteImpl {}
 
 }

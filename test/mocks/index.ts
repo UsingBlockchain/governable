@@ -9,5 +9,6 @@
 export { getTestContext } from './Contexts'
 export { getTestAccount, getTestMnemonic, getTestAccountInfo } from './Accounts'
 export { getTestMosaicInfo } from './Mosaics'
+export { getTestAggregateTransaction, getTestTransaction } from './Transactions'
 export { getTestOrganization, FakeOrganization } from './Organizations'
 export { Stubs } from './Stubs'

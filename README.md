@@ -1,3 +1,5 @@
+<p align="center"><img src="https://governable.symbol.ninja/logo-governable.png" width="192"></p>
+
 # Governable: Distributed Organizations
 
 [![npm version](https://badge.fury.io/js/governable.svg)](https://badge.fury.io/js/governable)
@@ -5,7 +7,7 @@
 
 This repository contains the source code for **governable**, an open standard for managing distributed organizations on top of Symbol from NEM, and compatible networks.
 
-- [Reference documentation](https://governable.symbol.ninja/docs/1.0.0)
+- [Reference documentation][ref-docs]
 - [Installation](#installation)
 - [Usage](#usage)
 - [Sponsor Us](#sponsor-us)
@@ -23,7 +25,7 @@ This repository contains the source code for **governable**, an open standard fo
 **account restriction**. Restrictions can potentially lock you out of your account, so
 please use this only with caution and only if you understand the risks.
 
-:white_check_mark: This package uses TEST_NET by default, you are free to specifiy other
+:white_check_mark: This package uses TEST_NET by default, you are free to specify other
 network parameters (see `transactionParams` in the source code below).
 
 ```javascript
@@ -85,6 +87,8 @@ const resultURI = myAwesomeOrg.execute(
 // wallets.
 ```
 
+For any further usage details, please refer to the [Reference Documentation]()
+
 ## Sponsor us
 
 | Platform | Sponsor Link |
@@ -108,6 +112,9 @@ Donations can also be made with cryptocurrencies and will be used for running th
 | --- | --- |
 | Using Blockchain Ltd (@UsingBlockchain) <info@using-blockchain.org> | Product Owner |
 | Grégory Saive (@eVias) | Lead Engineering |
+| Rebecca Natterer | Lead Product Designer |
+| Mansour Zebian | Lead Product Marketing |
+| Pascal Severin (@offdev) | Alpha Contributor |
 
 ## Disclaimer
 
@@ -120,3 +127,5 @@ Donations can also be made with cryptocurrencies and will be used for running th
 Copyright 2020-2021 Using Blockchain Ltd, Reg No.: 12658136, United Kingdom, All rights reserved.
 
 Licensed under the [AGPL v3 License](LICENSE).
+
+[ref-docs]: https://governable.symbol.ninja/docs/1.0.2

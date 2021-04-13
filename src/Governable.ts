@@ -88,8 +88,6 @@ export const DigitalContracts: ContractsList = {
   'CreateAgreement': (c, i): Contract => new ContractsImpl.CreateAgreement(c, i),
   'CommitAgreement': (c, i): Contract => new ContractsImpl.CommitAgreement(c, i),
   'CreateDAO': (c, i): Contract => new ContractsImpl.CreateDAO(c, i),
-  'CreateVote': (c, i): Contract => new ContractsImpl.CreateVote(c, i),
-  'Vote': (c, i): Contract => new ContractsImpl.Vote(c, i),
 }
 
 /**

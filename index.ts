@@ -24,6 +24,9 @@ export { BaseContract } from './src/kernel/BaseContract'
 export { Organization } from './src/kernel/Organization'
 export { Reader } from './src/kernel/Reader'
 export { KeyProvider } from './src/kernel/KeyProvider'
+export { SemanticsMap, SemanticRuleset } from './src/kernel/SemanticsMap'
+export { TaxonomyMap, TaxonomyMapEntry } from './src/kernel/TaxonomyMap'
+export { Taxonomy } from './src/kernel/Taxonomy'
 
 // models
 export { AllowanceResult } from './src/models/AllowanceResult'

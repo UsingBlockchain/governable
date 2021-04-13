@@ -15,19 +15,18 @@ import {
   Transaction,
   TransferTransaction,
   PlainMessage,
-  UInt64,
-  Mosaic,
-  EmptyMessage,
   SecretProofTransaction,
   SHA3Hasher,
+  TransactionType,
 } from 'symbol-sdk'
 
 // internal dependencies
 import {
   AllowanceResult,
-  AssetIdentifier,
   ContractOption,
   Symbol,
+  Taxonomy,
+  TaxonomyMap,
 } from '../../index'
 import { Executable } from './Executable'
 
@@ -49,6 +48,7 @@ import { Executable } from './Executable'
  *
  * | Argument | Description | Example |
  * | --- | --- | --- |
+ * | target | Target public account | `new PublicAccount(...)` |
  * | agreement | Agreement public account | `new PublicAccount(...)` |
  *
  * The execution of this contract results in the creation of
@@ -68,8 +68,28 @@ export class CommitAgreement extends Executable {
    *              *this* digital contract.
    */
   public arguments: string[] = [
+    'target',
     'agreement',
   ]
+
+  /**
+   * @overwrite Definition of the sequence of appearance of
+   * transactions inside a `CommitAgreement` contract.
+   */
+  public get specification(): Taxonomy {
+    // - Prepares required transactions
+    const requiredTxes = new TaxonomyMap([
+      [0, { type: TransactionType.SECRET_PROOF, required: true }],
+      [1, { type: TransactionType.TRANSFER, required: true }],
+      [2, { type: TransactionType.TRANSFER, required: true }],
+    ])
+
+    // - Bundle into a "transaction taxonomy"
+    return new Taxonomy(
+      'Governable.CommitAgreement',
+      requiredTxes,
+    )
+  }
 
   /**
    * Verifies **allowance** of \a actor to execute a contract
@@ -95,19 +115,15 @@ export class CommitAgreement extends Executable {
     // - Asserts the presence of mandatory inputs
     super.assertHasMandatoryArguments(argv, this.arguments)
 
-    // - Checks that operators of the distributed
-    //   organization can be read from the network
-    //   and restricts the contract to operators.
-    const isOperator = (this.operators.length && this.operators.some(
-      (p: Address) => {
-        return p.equals(actor.address)
-      })) as boolean
+    // - Reads the target account from arguments
+    const newTarget = this.context.getInput('target', new PublicAccount())
 
-    // - Allows operators to commit to a DAO agreement except
+    // - Allows anyone to commit to a DAO agreement except
     //   if another DAO agreement has been **commited** to
-    //   and *confirmed* on the network.
-    return new AllowanceResult(
-      isOperator && this.agreement === undefined
+    //   and *confirmed* on the network. The argument used
+    //   as the new target account must be the one agreed.
+    return new AllowanceResult(this.agreement === undefined &&
+      newTarget.address.equals(this.target.address)
     )
   }
 
@@ -154,8 +170,8 @@ export class CommitAgreement extends Executable {
     const agreement = this.context.getInput('agreement', new PublicAccount())
 
     // - Prepares unlocked secret
-    const secret = new Uint8Array(64) //XXX 32?
-    SHA3Hasher.func(secret, Convert.utf8ToUint8(this.identifier.id), 64)
+    const secret = new Uint8Array(32)
+    SHA3Hasher.func(secret, Convert.utf8ToUint8(this.identifier.id), 32)
 
     // - Prepares the response
     const transactions: InnerTransaction[] = []

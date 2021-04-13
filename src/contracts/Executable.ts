@@ -26,6 +26,7 @@ import {
   Context,
   FailureEmptyContract,
   Symbol,
+  Taxonomy,
 } from '../../index'
 import { MetadataBucket } from '../models/MetadataBucket'
 
@@ -141,6 +142,15 @@ export abstract class Executable extends BaseContract {
   public abstract get descriptor(): string
 
   /**
+   * This method MUST return a transaction taxonomy.
+   *
+   * @abstract
+   * @access public
+   * @return {Taxonomy}
+   */
+  public abstract get specification(): Taxonomy
+
+  /**
    * This method MUST return a list of unsigned transactions.
    * Transactions returned here will then be wrapped inside a
    * transaction URI in the `execute()` method.
@@ -176,7 +186,7 @@ export abstract class Executable extends BaseContract {
     // - By default, only target can execute contracts ("owner only")
     const isOperator = actor.address.equals(
       this.target.address
-    )
+    ) as boolean
 
     return new AllowanceResult(isOperator)
   }

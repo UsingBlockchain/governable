@@ -7,7 +7,6 @@
  * @license     AGPL-3.0
  */
  import {
-  EmptyMessage,
   InnerTransaction,
   LockHashAlgorithm,
   Mosaic,
@@ -18,18 +17,21 @@
   Transaction,
   TransferTransaction,
   UInt64,
+  SHA3Hasher,
+  Convert,
+  TransactionType,
 } from 'symbol-sdk'
 import { MnemonicPassPhrase } from 'symbol-hd-wallets'
 
 // internal dependencies
 import {
   AllowanceResult,
-  AssetIdentifier,
   ContractOption,
   Symbol,
+  Taxonomy,
+  TaxonomyMap,
 } from '../../index'
 import { Executable } from './Executable'
-import { TargetDerivationPath } from '../Governable'
 
 /**
  * @class Governable.CreateAgreement
@@ -78,6 +80,26 @@ export class CreateAgreement extends Executable {
     'operators',
     'agreementPath',
   ]
+
+  /**
+   * @overwrite Definition of the sequence of appearance of
+   * transactions inside a `CommitAgreement` contract.
+   */
+  public get specification(): Taxonomy {
+    // - Prepares required transactions
+    const requiredTxes = new TaxonomyMap([
+      [0, { type: TransactionType.MULTISIG_ACCOUNT_MODIFICATION, required: true }],
+      [1, { type: TransactionType.SECRET_LOCK, required: true }],
+      [2, { type: TransactionType.TRANSFER, required: true }],
+      [3, { type: TransactionType.TRANSFER, required: true }],
+    ])
+
+    // - Bundle into a "transaction taxonomy"
+    return new Taxonomy(
+      'Governable.CreateAgreement',
+      requiredTxes,
+    )
+  }
 
   /**
    * Verifies **allowance** of \a actor to execute a contract
@@ -153,7 +175,11 @@ export class CreateAgreement extends Executable {
     const password = this.context.getInput('password', '')
     const mnemonic = this.context.getInput('mnemonic', new MnemonicPassPhrase(''))
     const agreementPath = this.context.getInput('agreementPath', '')
-    const operators = this.context.getInput('operators', [])
+    const operators = this.context.getInput('operators', [new PublicAccount()])
+
+    // - Prepares the secret to be agreed upon
+    const secret = new Uint8Array(32) //XXX 32?
+    SHA3Hasher.func(secret, Convert.utf8ToUint8(this.identifier.id), 32)
 
     // - Derives the **agreement** account in local scope
     const agreement = Symbol.Accountable.derive(
@@ -168,12 +194,12 @@ export class CreateAgreement extends Executable {
     const signers: PublicAccount[] = []
 
     // - Transaction 01: MultisigAccountModificationTransaction
-    // :warning: minRemoval is always n-1 to permit loss of up to 1 key.
+    // :warning: minRemoval is n-1 to permit loss of up to 1 key.
     transactions.push(MultisigAccountModificationTransaction.create(
       this.context.parameters.deadline,
       operators.length, // all operators for minApproval
-      operators.length - 1, // all except one for minRemoval
-      operators,
+      operators.length - 1,
+      operators.map(o => o.address),
       [],
       reader.networkType,
       undefined, // maxFee 0 for inner
@@ -188,7 +214,7 @@ export class CreateAgreement extends Executable {
       new Mosaic(reader.feeMosaicId, UInt64.fromUint(1)),
       UInt64.fromUint(720), // 720 blocks
       LockHashAlgorithm.Op_Sha3_256,
-      this.identifier.id,
+      Buffer.from(secret).toString('hex'),
       this.target.address,
       reader.networkType,
       undefined, // maxFee 0 for inner
