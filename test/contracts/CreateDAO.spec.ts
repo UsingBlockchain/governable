@@ -161,13 +161,38 @@ describe('contracts/CreateDAO --->', () => {
       transaction = resultTxURI.toTransaction()
     })
 
-    it('contain 1 aggregate transaction', () => {
+    it('contain exactly one aggregate transaction', () => {
       expect(transaction).to.be.instanceof(AggregateTransaction)
     })
 
-    it('contain 18 embedded transactions given full with 2 operators', () => {
+    it('contain all embedded transactions given full with 2 operators', () => {
       const aggregate = transaction as AggregateTransaction
       expect(aggregate.innerTransactions.length).to.be.equal(19)
+    })
+
+    it('contain all embedded transactions given full with 5 operators', () => {
+      let newOperators = [
+        getTestAccount('operator1'),
+        getTestAccount('operator2'),
+        getTestAccount('operator3'),
+        getTestAccount('random1'),
+        getTestAccount('random2'),
+      ]
+      let newContext = organisation.fakeGetContext(getTestAccount('operator1'), undefined, [
+        new ContractOption('target', organisation.target),
+        new ContractOption('operators', newOperators),
+        new ContractOption('metadata', testMetaValues)
+      ])
+      let validContract = new CreateDAO(newContext, organisation.identifier)
+      validContract.agreement = getTestAggregateTransaction()
+
+      let validResultTxURI = validContract.execute(getTestAccount('operator1'), [
+        new ContractOption('target', organisation.target),
+        new ContractOption('operators', newOperators),
+        new ContractOption('metadata', testMetaValues)
+      ])
+      let validAggregate = validResultTxURI.toTransaction() as AggregateTransaction
+      expect(validAggregate.innerTransactions.length).to.be.equal(25)
     })
 
     it('contain correct sequence of embedded transactions', () => {

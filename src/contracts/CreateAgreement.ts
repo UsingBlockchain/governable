@@ -22,14 +22,13 @@
   TransactionType,
 } from 'symbol-sdk'
 import { MnemonicPassPhrase } from 'symbol-hd-wallets'
+import { Taxonomy, TaxonomyMap } from '@ubcdigital/symbol-taxonomy'
 
 // internal dependencies
 import {
   AllowanceResult,
   ContractOption,
   Symbol,
-  Taxonomy,
-  TaxonomyMap,
 } from '../../index'
 import { Executable } from './Executable'
 

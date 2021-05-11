@@ -19,14 +19,13 @@ import {
   SHA3Hasher,
   TransactionType,
 } from 'symbol-sdk'
+import { Taxonomy, TaxonomyMap } from '@ubcdigital/symbol-taxonomy'
 
 // internal dependencies
 import {
   AllowanceResult,
   ContractOption,
   Symbol,
-  Taxonomy,
-  TaxonomyMap,
 } from '../../index'
 import { Executable } from './Executable'
 

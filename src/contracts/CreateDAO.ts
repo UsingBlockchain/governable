@@ -34,6 +34,7 @@ import {
   UInt64,
   TransactionType,
 } from 'symbol-sdk'
+import { SemanticsMap, Taxonomy, TaxonomyMap } from '@ubcdigital/symbol-taxonomy'
 
 // internal dependencies
 import {
@@ -41,9 +42,6 @@ import {
   ContractOption,
   MetadataBucket,
   Symbol,
-  Taxonomy,
-  TaxonomyMap,
-  SemanticsMap,
 } from '../../index'
 import { Executable } from './Executable'
 

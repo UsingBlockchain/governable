@@ -2,92 +2,46 @@
 
 # Governable: Distributed Organizations
 
-[![npm version](https://badge.fury.io/js/governable.svg)](https://badge.fury.io/js/governable)
-[![Build Status](https://travis-ci.com/usingblockchain/governable.svg?branch=main)](https://travis-ci.com/usingblockchain/governable)
+[![npm-badge][npm-badge]][npm-url]
+[![size-badge][size-badge]][npm-url]
+[![dl-badge][dl-badge]][npm-url]
+[![Build Status](https://travis-ci.com/UsingBlockchain/symbol-taxonomy.svg?branch=main)](https://travis-ci.com/UsingBlockchain/symbol-taxonomy)
 
 This repository contains the source code for **governable**, an open standard for managing distributed organizations on top of Symbol from NEM, and compatible networks.
 
+This library empowers the creation and operations of **distributed organizations** using Symbol from NEM and compatible networks.
+
 - [Reference documentation][ref-docs]
+- [Introduction](#introduction)
+- [Contracts found here](#contracts-found-here)
 - [Installation](#installation)
-- [Usage](#usage)
 - [Sponsor Us](#sponsor-us)
 - [Disclaimer](#disclaimer)
 - [Licensing](#license)
 
+## Introduction
+
+This library empowers the creation and operations of distributed organizations using Symbol from NEM and compatible networks.
+
+A distributed organization is represented by the following properties, which have to be agreed upon by operators during an initial launch agreement:
+
+- **An agreement transaction**: Consists of a multi-signature account which uses `SecretLockTransaction` and `TransferTransaction` to prove a DAO agreement of operators on-chain.
+
+- **A target account**: Consists of a public account that was agreed upon by operators to represent the distributed organization as an entity. This account will be converted to a multi-signature account where cosignatories are the operators of the DAO.
+
+- **A governance mosaic**: Consists of a digital asset that is created only for the purpose of keeping track of operators' ability to help with decision making in a distributed organization. Governance mosaics are always non-transferrable. This implies that a *transfer* of authority is not possible and, isntead, enforces an *agreement* to be persisted on-chain.
+
+## Contracts found here
+
+| Contract Name | Description |
+| --- | --- |
+| **CreateAgreement** | Contract for *starting* a DAO launch agreement with associates (other operators), and thereby initiating the process of creation of a distributed organization. Note, that the first listed operator account will *fund* the account used for the *agreement* with 1 `symbol.xym`. This amount is sent to the **target** account when the agreement has been **commited** to and confirmed on the network.|
+| **CommitAgreement** | Contract for *finalizing* a DAO launch agreement. Operators must be the same as those whom previously executed the `CreateAgreement` contract. The funds locked by secret are hereby unlocked and owned by the agreed upon target public account of the DAO. |
+| **CreateDAO** | Contract for creating a distributed organization with operators. A launch agreement MUST have taken place before and also MUST be accessible through the network to read information about the agreed target account public key. |
+
 ## Installation
 
-`npm i -g governable`
-
-## Usage
-
-:warning: The following example usage for the `governable` library is subject to change.
-:warning: This command execution creates at least one- or more than one - network-wide
-**account restriction**. Restrictions can potentially lock you out of your account, so
-please use this only with caution and only if you understand the risks.
-
-:white_check_mark: This package uses TEST_NET by default, you are free to specify other
-network parameters (see `transactionParams` in the source code below).
-
-```javascript
-import { NetworkType, PublicAccount } from 'symbol-sdk'
-import { MnemonicPassPhrase } from 'symbol-hd-wallets'
-import { TransactionURI } from 'symbol-hd-wallets'
-import { Governable, NetworkConfig, TransactionParameters } from 'governable'
-
-// - The following settings are network specific and may need changes
-const networkType = NetworkType.TEST_NET
-const sourceNetwork = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6'
-const symbolMosaicId = '6BED913FA20223F8';
-const transactionParams = new TransactionParameters(
-  1573430400, // epochAdjustment
-  Deadline.create(), // transaction(s) deadline
-  750000, // maxFee
-)
-
-// - You should use secure storage practices for mnemonic pass phrases.
-const keyRing = MnemonicPassPhrase.createRandom()
-
-// - Initializes a so-called "network reader". The URL used here should
-//   typically refer to a running REST gateway on your node.
-const reader = new Symbol.Reader(
-  'http://dual-001.symbol.ninja:3000',
-  networkType,
-  sourceNetwork,
-  1615853185,
-  new MosaicId(symbolMosaicId),
-  '306FA94E0AB682964416C8172F858939533E5998906B8AFAD4A4585C7CDD722C',
-)
-
-// - Initializes a key provider and distributed organization instance.
-const signer = new Symbol.Signer() 
-const myAwesomeOrg = new Governable.DistributedOrganization(
-  'My awesome DAO',
-  reader,
-  signer,
-  keyRing,
-  's3t.a;Secure!P4ssw0rd#',
-)
-
-// - Stores the transaction URI for `CreateAgreement` execution
-const resultURI = myAwesomeOrg.execute(
-  myAwesomeOrg.getTarget().publicAccount, // actor
-  myAwesomeOrg.identifier,
-  'CreateAgreement',
-  transactionParams,
-  []
-)
-
-// It is important to denote that given the **aggregate** nature of digital
-// contracts, multiple parties MAY be involved in the transaction and
-// it is therefor required to issue a HashLockTransaction before announcing
-// the aggregate bonded transaction that represents the contract.
-
-// :warning: It is recommended to sign the resulting transactions
-// using a hardware wallet rather than any type of software generated
-// wallets.
-```
-
-For any further usage details, please refer to the [Reference Documentation]()
+`npm i -g @ubcdigital/governable`
 
 ## Sponsor us
 
@@ -106,16 +60,6 @@ Donations can also be made with cryptocurrencies and will be used for running th
     Ethereum (ETH):     0x7a846fd5Daa4b904caF7C59f866bb906153305D2
     Bitcoin  (BTC):     3EVqgUqYFRYbf9RjhyjBgKXcEwAQxhaf6o
 
-## Credits
-
-| Name | Contributions |
-| --- | --- |
-| Using Blockchain Ltd (@UsingBlockchain) <info@using-blockchain.org> | Product Owner |
-| Grégory Saive (@eVias) | Lead Engineering |
-| Rebecca Natterer | Lead Product Designer |
-| Mansour Zebian | Lead Product Marketing |
-| Pascal Severin (@offdev) | Alpha Contributor |
-
 ## Disclaimer
 
   *The author of this package cannot be held responsible for any loss of money or any malintentioned usage forms of this package. Please use this package with caution.*
@@ -124,8 +68,13 @@ Donations can also be made with cryptocurrencies and will be used for running th
 
 ## License
 
-Copyright 2020-2021 Using Blockchain Ltd, Reg No.: 12658136, United Kingdom, All rights reserved.
+Copyright 2020-2021 [Using Blockchain Ltd][ref-ltd], Reg No.: 12658136, United Kingdom, All rights reserved.
 
 Licensed under the [AGPL v3 License](LICENSE).
 
-[ref-docs]: https://governable.symbol.ninja/docs/1.0.2
+[ref-docs]: https://governable.symbol.ninja/
+[ref-ltd]: https://using-blockchain.org
+[npm-url]: https://www.npmjs.com/package/@ubcdigital/governable
+[npm-badge]: https://img.shields.io/npm/v/@ubcdigital/governable
+[size-badge]: https://img.shields.io/bundlephobia/min/@ubcdigital/governable
+[dl-badge]: https://img.shields.io/npm/dt/@ubcdigital/governable

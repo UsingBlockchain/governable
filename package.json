@@ -1,6 +1,6 @@
 {
-  "name": "governable",
-  "version": "1.0.2",
+  "name": "@ubcdigital/governable",
+  "version": "1.0.3",
   "license": "AGPL-3.0",
   "description": "Governable: Distributed Organizations",
   "keywords": [
@@ -22,7 +22,8 @@
     "rxjs": "^6.6.6",
     "symbol-sdk": "^1.0.0",
     "symbol-hd-wallets": "^0.14.0",
-    "symbol-uri-scheme": "^0.6.0"
+    "symbol-uri-scheme": "^0.6.0",
+    "@ubcdigital/symbol-taxonomy": "^1.0.3"
   },
   "devDependencies": {
     "@types/chai": "^4.2.15",
@@ -59,5 +60,5 @@
   "bugs": {
     "url": "https://github.com/usingblockchain/governable/issues"
   },
-  "homepage": "https://github.com/usingblockchain/governable#readme"
+  "homepage": "https://governable.symbol.ninja"
 }

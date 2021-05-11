@@ -16,6 +16,7 @@ import {
   Transaction,
   TransactionMapping,
 } from 'symbol-sdk'
+import { Taxonomy } from '@ubcdigital/symbol-taxonomy'
 
 // internal dependencies
 import {
@@ -26,7 +27,6 @@ import {
   Context,
   FailureEmptyContract,
   Symbol,
-  Taxonomy,
 } from '../../index'
 import { MetadataBucket } from '../models/MetadataBucket'
 
